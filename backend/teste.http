@@ -1,0 +1,20 @@
+@hostname = http://localhost:3000
+@userId = 68fe3fe9c511590b15c6ab0e
+
+### Criar usuário
+POST {{hostname}}/api/users
+Content-Type: application/json
+
+{
+    "email": "teste@teste.com",
+    "password": "12345678"
+}
+
+### Ver todos os usuários
+GET {{hostname}}/api/users
+
+### Pegar usuário por id
+GET {{hostname}}/api/users/{{userId}}
+
+### Deletar usuário
+DELETE {{hostname}}/api/users/{{userId}}
