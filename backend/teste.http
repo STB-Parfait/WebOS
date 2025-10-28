@@ -1,5 +1,5 @@
 @hostname = http://localhost:3000
-@userId = 68fe3fe9c511590b15c6ab0e
+@userId = 6900d3484e78f2b9dc007297
 
 ### Criar usuário
 POST {{hostname}}/api/users
