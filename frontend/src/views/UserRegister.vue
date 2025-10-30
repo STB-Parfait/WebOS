@@ -1,6 +1,6 @@
 <script setup>
 
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
 
     const activeTab = ref('none');
 
@@ -15,34 +15,50 @@
 </script>
 
 <template>
-  <div class="container">
-    <div class="card">
-      <img src="/placeholder.svg" alt="placeholder.svg" />
-      <h1>WebOS</h1>
-      <p>V. 0.0.1</p>
+    <div class="back">
+        <video autoplay muted loop poster="/public/placeholder.svg">
+            <source src="/public/sky_loop.mp4" type="video/mp4"></source>
+        </video>
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn" @click="toggleTab('login')">login</button>
-      <button class="tab-btn" @click="toggleTab('register')">register</button>
-    </div>
+    <div class="container">
+        <div class="card">
+            <img src="/placeholder.svg" alt="placeholder.svg" />
+            <h1>WebOS</h1>
+            <p>V. 0.0.1</p>
+        </div>
 
-    <div v-if="activeTab=='login'" class="tab login">
-      <input type="email" placeholder="email" /><br />
-      <input type="password" placeholder="password" />
-      <button>continue</button>
-    </div>
+        <div class="tabs">
+            <button class="tab-btn" @click="toggleTab('login')">login</button>
+            <button class="tab-btn" @click="toggleTab('register')">register</button>
+        </div>
 
-    <div v-if="activeTab=='register'" class="tab register">
-      <input type="email" placeholder="email" /><br />
-      <input type="password" placeholder="password" /><br/>
-      <input type="password" placeholder="confirm password"/>
-      <button>continue</button>
+        <div v-if="activeTab=='login'" class="tab login">
+            <input type="email" placeholder="email" /><br />
+            <input type="password" placeholder="password" />
+            <button>continue</button>
+        </div>
+
+        <div v-if="activeTab=='register'" class="tab register">
+            <input type="email" placeholder="email" /><br />
+            <input type="password" placeholder="password" /><br/>
+            <input type="password" placeholder="confirm password"/>
+            <button>continue</button>
+        </div>
     </div>
-  </div>
 </template>
 
 <style>
+.back{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
 .container {
   width: fit-content;
   position: relative;
