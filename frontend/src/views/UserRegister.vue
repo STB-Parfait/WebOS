@@ -1,6 +1,6 @@
 <script setup>
 
-    import { ref, onMounted } from 'vue';
+    import { ref } from 'vue';
 
     const activeTab = ref('none');
 
@@ -17,7 +17,7 @@
 <template>
     <div class="back">
         <video autoplay muted loop poster="/public/placeholder.svg">
-            <source src="/public/sky_loop.mp4" type="video/mp4"></source>
+            <source src="/public/sky_loop.mp4" type="video/mp4"/>
         </video>
     </div>
 
@@ -40,15 +40,34 @@
         </div>
 
         <div v-if="activeTab=='register'" class="tab register">
-            <input type="email" placeholder="email" /><br />
-            <input type="password" placeholder="password" /><br/>
-            <input type="password" placeholder="confirm password"/>
+            <div class="wrapper">
+              <input type="text" placeholder="username"/><div class="statusDot"></div>  
+            </div>
+            <div class="wrapper">
+              <input type="email" placeholder="email"/><div class="statusDot"></div>
+            </div>
+            <div class="wrapper">
+              <input type="password" placeholder="password"/><div class="statusDot"></div><br/>
+            </div>
+            <div class="wrapper">
+              <input type="password" placeholder="confirm password"/><div class="statusDot"></div>
+            </div>
             <button>continue</button>
         </div>
     </div>
 </template>
 
 <style>
+.wrapper{
+  display: flex;
+  align-items: center;
+}
+.statusDot{
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+}
 .back{
     position: fixed;
     top: 0;
@@ -118,6 +137,7 @@ p {
 
 .tab input {
     margin-bottom: 5px;
+    margin-right: 5px;
     width: 90%;
 }
 
