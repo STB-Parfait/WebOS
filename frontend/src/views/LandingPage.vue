@@ -67,6 +67,47 @@ const confirmPassStatus = computed(() => {
     return 'invalid'
   }
 })
+
+const usernameInput = ref('')
+
+async function handleRegister() {
+  if (
+    emailStatus.value === 'valid' &&
+    mainPassStatus.value === 'valid' &&
+    confirmPassStatus.value === 'valid'
+  ) {
+    try {
+      const username = usernameInput.value
+      const email = registerEmail.value
+      const password = mainPass.value
+
+      const response = await fetch('http://localhost:3000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro na rede')
+      } else {
+        alert('New user registered!')
+        usernameInput.value = ''
+        registerEmail.value = ''
+        mainPass.value = ''
+        confirmPass.value = ''
+        emailStatus.value = 'hidden'
+        activeTab.value = 'login'
+      }
+    } catch (err) {
+      console.error(err)
+      emailStatus.value = 'invalid'
+    }
+  }
+}
 </script>
 
 <template>
@@ -96,7 +137,7 @@ const confirmPassStatus = computed(() => {
 
     <div v-if="activeTab == 'register'" class="tab register">
       <div class="wrapper">
-        <input type="text" placeholder="username" />
+        <input type="text" placeholder="username" v-model="usernameInput" />
       </div>
       <div class="wrapper">
         <input type="email" placeholder="email" v-model="registerEmail" @blur="checkEmail" />
@@ -107,6 +148,7 @@ const confirmPassStatus = computed(() => {
             valid: emailStatus === 'valid',
             invalid: emailStatus === 'invalid',
           }"
+          :title="emailStatus === 'invalid' ? 'This email is already in use' : ''"
         ></div>
       </div>
 
@@ -139,7 +181,7 @@ const confirmPassStatus = computed(() => {
         ></div>
       </div>
 
-      <button>continue</button>
+      <button @click="handleRegister">continue</button>
     </div>
   </div>
 </template>
