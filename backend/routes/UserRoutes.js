@@ -6,6 +6,9 @@ router.route('/')
     .post(userController.createUser)
     .get(userController.getUsers);
 
+router.route('/checkemail')
+    .post(userController.checkEmails)
+
 router.route('/:id')
     .get(userController.getUserById)
     .delete(userController.deleteUser);

@@ -23,6 +23,39 @@ const mainPassStatus = computed(() => {
   }
 })
 
+const registerEmail = ref('')
+const emailStatus = ref('hidden')
+
+async function checkEmail() {
+  const email = registerEmail.value
+
+  if (email.length === 0) {
+    emailStatus.value = 'hidden'
+    return
+  }
+
+  emailStatus.value = 'loading'
+
+  try {
+    const response = await fetch('http://localhost:3000/api/users/checkemail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Erro na rede')
+    }
+
+    const data = await response.json()
+
+    emailStatus.value = data.isAvaliable ? 'valid' : 'invalid'
+  } catch (err) {
+    console.error(err)
+    emailStatus.value = 'invalid'
+  }
+}
+
 const confirmPass = ref('')
 
 const confirmPassStatus = computed(() => {
@@ -64,11 +97,17 @@ const confirmPassStatus = computed(() => {
     <div v-if="activeTab == 'register'" class="tab register">
       <div class="wrapper">
         <input type="text" placeholder="username" />
-        <div class="statusDot"></div>
       </div>
       <div class="wrapper">
-        <input type="email" placeholder="email" />
-        <div class="statusDot"></div>
+        <input type="email" placeholder="email" v-model="registerEmail" @blur="checkEmail" />
+        <div
+          class="statusDot"
+          :class="{
+            hidden: emailStatus === 'hidden',
+            valid: emailStatus === 'valid',
+            invalid: emailStatus === 'invalid',
+          }"
+        ></div>
       </div>
 
       <div class="wrapper">
@@ -80,6 +119,9 @@ const confirmPassStatus = computed(() => {
             invalid: mainPassStatus === 'invalid',
             valid: mainPassStatus === 'valid',
           }"
+          :title="
+            mainPassStatus === 'invalid' ? 'The password must have between 8 and 32 digits' : ''
+          "
         ></div>
         <br />
       </div>
@@ -93,6 +135,7 @@ const confirmPassStatus = computed(() => {
             invalid: confirmPassStatus === 'invalid',
             valid: confirmPassStatus === 'valid',
           }"
+          :title="confirmPassStatus === 'invalid' ? 'Make sure bolth passwords are equal' : ''"
         ></div>
       </div>
 

@@ -1,11 +1,12 @@
 @hostname = http://localhost:3000
-@userId = 6900d3484e78f2b9dc007297
+@userId = 6906a62f29799dbaa80d9e32
 
 ### Criar usuário
 POST {{hostname}}/api/users
 Content-Type: application/json
 
 {
+    "username": "joãozinho",
     "email": "teste@teste.com",
     "password": "12345678"
 }
@@ -18,3 +19,11 @@ GET {{hostname}}/api/users/{{userId}}
 
 ### Deletar usuário
 DELETE {{hostname}}/api/users/{{userId}}
+
+### Checar Email
+POST {{hostname}}/api/users/checkemail
+Content-Type: application/json
+
+{
+    "email": "teste@teste.com"
+}

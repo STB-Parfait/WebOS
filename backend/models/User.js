@@ -3,6 +3,11 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+    username:{
+        type: String,
+        required: [true, 'A username is required'],
+        maxlength: [16, 'The limit is 16 characters'],
+    },
     email: {
         type: String,
         required: [true, 'An email is required'],
@@ -13,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A password is required'],
         minlength: [8, 'The password needs to have at least 8 digits'],
+        maxlength: [16, 'The limit is 16 characters'],
     }
 }, {timestamps: true});
 
