@@ -1,5 +1,8 @@
-@hostname = http://localhost:3000
+@hostname = http://localhost:5020
 @userId = 690768ced5be8cffc3350f48
+
+### Testar rota básica
+GET {{hostname}}
 
 ### Criar usuário
 POST {{hostname}}/api/users

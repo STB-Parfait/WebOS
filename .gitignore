@@ -1,4 +1,6 @@
-/backend/node_modules
+/backend/bin
+/backend/obj
+backend/.vscode
 /backend/.http
 /backend/.env
 /backend/.http
