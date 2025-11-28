@@ -1,5 +1,5 @@
 @hostname = http://localhost:5020
-@userId = 690768ced5be8cffc3350f48
+@userId = 692a1e974b3c8086923a2da0
 
 ### Testar rota básica
 GET {{hostname}}
@@ -13,9 +13,6 @@ Content-Type: application/json
     "email": "teste@teste.com",
     "password": "12345678"
 }
-
-### Ver todos os usuários
-GET {{hostname}}/api/users
 
 ### Pegar usuário por id
 GET {{hostname}}/api/users/{{userId}}

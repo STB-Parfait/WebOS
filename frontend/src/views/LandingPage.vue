@@ -37,7 +37,7 @@ async function checkEmail() {
   emailStatus.value = 'loading'
 
   try {
-    const response = await fetch('http://localhost:3000/api/users/checkemail', {
+    const response = await fetch('http://localhost:5020/api/users/checkemail', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email }),
@@ -81,7 +81,7 @@ async function handleRegister() {
       const email = registerEmail.value
       const password = mainPass.value
 
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch('http://localhost:5020/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,5 +1,8 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using Backend.Services;
+using Backend.Database;
+using Backend.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +21,13 @@ builder.Services.AddDbContext<LocalDbContext>(options =>
     options.UseMongoDB(connectionString, databaseName);
 });
 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
+
+app.MapUserEndpoints();
 
 app.Run();
