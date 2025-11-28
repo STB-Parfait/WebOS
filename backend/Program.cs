@@ -6,6 +6,18 @@ using Backend.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", 
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    );
+});
+
 Env.Load();
 var connectionString = Environment.GetEnvironmentVariable("MONGO_URI");
 
@@ -25,6 +37,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 app.MapGet("/", () => "Hello World!");
 
