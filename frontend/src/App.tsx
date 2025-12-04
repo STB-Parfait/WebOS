@@ -11,6 +11,8 @@ function App() {
   const [confirmPass, setConfirmPass] = createSignal('');
   const [registerEmail, setRegisterEmail] = createSignal('');
   const [emailStatus, setEmailStatus] = createSignal('hidden');
+  const [loginEmail, setLoginEmail] = createSignal('');
+  const [loginPass, setLoginPass] = createSignal('');
 
   const mainPassStatus = createMemo(() => {
     const len = mainPass().length;
@@ -60,6 +62,31 @@ function App() {
     }
   }
 
+  async function handleLogin() {
+    if(loginEmail()!=='' && loginPass()!==''){
+      try{
+        const response = await fetch('http://localhost:5020/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email: loginEmail(),
+            password: loginPass()
+          }),
+          credentials: 'include'
+        });
+        if(!response.ok){
+          throw new Error('Net error');
+        } else{
+          setLoginEmail('');
+          setLoginPass('');
+          alert('Successfull login');
+        }
+      } catch(err){
+        console.error(err);
+      }
+    }
+  }
+
   async function handleRegister() {
     if (
       emailStatus() === 'valid' &&
@@ -80,7 +107,7 @@ function App() {
         if (!response.ok){
           throw new Error('Net error');
         } else{
-          alert('New user registered!');
+          //alert('New user registered!');
           setUsernameInput('');
           setRegisterEmail('');
           setMainPass('');
@@ -115,10 +142,16 @@ function App() {
       <Show when={activeTab() === 'login'}>
         <div class="tab login">
         <div class="wrapper">
-          <input type="email" placeholder="email" /><br />
+          <input type="email" placeholder="email" 
+          value={loginEmail()}
+          onInput={(e) => setLoginEmail(e.currentTarget.value)}
+          /><br />
         </div>
         <div class="wrapper">
-          <input type="password" placeholder="password" />
+          <input type="password" placeholder="password" 
+          value={loginPass()}
+          onInput={(e) => setLoginPass(e.currentTarget.value)}
+          />
         </div>
           <button>continue</button>
         </div>
