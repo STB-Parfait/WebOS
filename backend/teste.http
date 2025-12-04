@@ -26,6 +26,10 @@ Content-Type: application/json
 ### logout
 POST {{hostname}}/api/users/logout
 
+### teste usuário logado
+GET {{hostname}}/api/users/me
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOlsiNjkzMTc2NmNhYjFmMjNhN2RlNDQxODQwIiwiam_Do296aW5obyJdLCJuYmYiOjE3NjQ4NDk0NTgsImV4cCI6MTc2NDg3ODI1OCwiaWF0IjoxNzY0ODQ5NDU4fQ.odlhpqt8y_RFO6bG31v_l9ZbWou8WbzFGzurPqPVtW4; expires=Thu, 04 Dec 2025 19:57:38 GMT; path=/; secure; samesite=strict; httponly
+
 ### Pegar usuário por id
 GET {{hostname}}/api/users/{{userId}}
 

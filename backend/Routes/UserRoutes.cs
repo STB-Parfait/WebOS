@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Backend.Routes;
 
@@ -70,6 +72,19 @@ public static class UserRoutes
         {
         httpContext.Response.Cookies.Delete("accessToken");
         return Results.Ok(new { message = "Logout" });
+        });
+
+        group.MapGet("/me", [Authorize] (HttpContext httpContext) =>
+        {
+            var user = httpContext.User;
+            var id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username = user.FindFirst(ClaimTypes.Name)?.Value;
+            return Results.Ok(new
+            {
+                id = id,
+                username = username,
+                isAuthenticated = true
+            });
         });
     }
 }
