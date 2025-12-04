@@ -1,8 +1,8 @@
 /* @refresh reload */
 import { render } from 'solid-js/web'
 import './index.css'
-import AuthPage from './pages/AuthPage.tsx'
+import App from './pages/App.tsx'
 
 const root = document.getElementById('root')
 
-render(() => <AuthPage />, root!)
+render(() => <App />, root!)

@@ -1,7 +1,8 @@
 import { createSignal, createMemo, Show } from 'solid-js'
+import { login } from '../store';
 import '../styles/AuthPage.css'
-import placeholderLogo from './assets/placeholder.svg'
-import backgroundLoop from './assets/sky_loop.mp4'
+import placeholderLogo from '../assets/placeholder.svg'
+import backgroundLoop from '../assets/sky_loop.mp4'
 
 function AuthPage() {
 
@@ -80,7 +81,7 @@ function AuthPage() {
         } else{
           setLoginEmail('');
           setLoginPass('');
-          alert('Successfull login');
+          login();
         }
       } catch(err){
         console.error(err);
@@ -108,13 +109,9 @@ function AuthPage() {
         if (!response.ok){
           throw new Error('Net error');
         } else{
-          //alert('New user registered!');
-          setUsernameInput('');
-          setRegisterEmail('');
-          setMainPass('');
-          setConfirmPass('');
-          setEmailStatus('hidden');
-          setActiveTab('login');
+          setLoginEmail(registerEmail());
+          setLoginPass(mainPass());
+          await handleLogin();
         }
       } catch(err){
         console.error(err);
