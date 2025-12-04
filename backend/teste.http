@@ -14,6 +14,18 @@ Content-Type: application/json
     "password": "12345678"
 }
 
+### login
+POST {{hostname}}/api/users/login
+Content-Type: application/json
+
+{
+    "email": "teste@teste.com",
+    "password": "12345678" 
+}
+
+### logout
+POST {{hostname}}/api/users/logout
+
 ### Pegar usuário por id
 GET {{hostname}}/api/users/{{userId}}
 

@@ -44,5 +44,32 @@ public static class UserRoutes
 
             return Results.Ok(new { isAvaliable = !avaliable });
         });
+
+        group.MapPost("/login", async (HttpContext httpContext, UserService userService, TokenService tokenService, [FromBody] LoginDTO login) =>
+        {
+            var user = await userService.ValidarLogin(login.Email, login.Password);
+
+            if (user is null) return Results.Unauthorized();
+
+            var token = tokenService.GenerateToken(user);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true, 
+                Secure = true,   
+                SameSite = SameSiteMode.Strict, 
+                Expires = DateTime.UtcNow.AddHours(8) 
+            };
+
+            httpContext.Response.Cookies.Append("accessToken", token, cookieOptions);
+
+            return Results.Ok(new { message = "Successfull login!" });
+        });
+
+        group.MapPost("/logout", (HttpContext httpContext) =>
+        {
+        httpContext.Response.Cookies.Delete("accessToken");
+        return Results.Ok(new { message = "Logout" });
+        });
     }
 }

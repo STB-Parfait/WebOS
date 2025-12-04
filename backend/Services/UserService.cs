@@ -65,6 +65,21 @@ public class UserService
         return true;
     }
 
+    public async Task<User?> ValidarLogin(string email, string password)
+        {
+            var user = await _db.users
+            .FirstOrDefaultAsync(u => u.email == email);
+
+            if (user is null) return null;
+
+            // 3. Verifica a senha
+            // ATENÇÃO: Como estamos aprendendo, estamos comparando texto puro.
+            // Em produção, aqui você usaria BCrypt.Verify(password, user.PasswordHash)
+            if (user.password != password) return null;
+
+            return user;
+        }
+
     public async Task<bool> CheckEmail(string email)
     {
         return await _db.users.AnyAsync(u => u.email == email);

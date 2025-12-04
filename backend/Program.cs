@@ -1,5 +1,8 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Backend.Services;
 using Backend.Database;
 using Backend.Routes;
@@ -11,9 +14,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", 
         policy =>
         {
-            policy.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
+            policy.WithOrigins("http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
         }
     );
 });
@@ -36,12 +40,55 @@ builder.Services.AddDbContext<LocalDbContext>(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddAuthorization();
 
+var keyString = Environment.GetEnvironmentVariable("JWT_SECRET");
+if (string.IsNullOrEmpty(keyString))
+{
+    throw new Exception("Missing enviroment variable");
+}
+var key = Encoding.ASCII.GetBytes(keyString);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false; // Em prod, mude para true
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false, 
+        ValidateAudience = false 
+    };
+    x.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var tokenNoCookie = context.Request.Cookies["accessToken"];
+            
+            if (!string.IsNullOrEmpty(tokenNoCookie))
+            {
+                context.Token = tokenNoCookie;
+            }
+            
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddScoped<TokenService>();
+
 var app = builder.Build();
+
+app.UseAuthentication(); // "Quem é você?" (Lê o token)
+app.UseAuthorization();  // "O que você pode fazer?"
 
 app.UseCors("AllowAll");
 
 app.MapGet("/", () => "Hello World!");
 
 app.MapUserEndpoints();
-
 app.Run();
