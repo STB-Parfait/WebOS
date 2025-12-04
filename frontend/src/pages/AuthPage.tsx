@@ -1,9 +1,9 @@
 import { createSignal, createMemo, Show } from 'solid-js'
-import './App.css'
+import '../styles/AuthPage.css'
 import placeholderLogo from './assets/placeholder.svg'
 import backgroundLoop from './assets/sky_loop.mp4'
 
-function App() {
+function AuthPage() {
 
   const [activeTab, setActiveTab] = createSignal('none');
   const [usernameInput, setUsernameInput] = createSignal('');
@@ -75,6 +75,7 @@ function App() {
           credentials: 'include'
         });
         if(!response.ok){
+          alert("ERRO: email ou senha incorretos");
           throw new Error('Net error');
         } else{
           setLoginEmail('');
@@ -153,7 +154,7 @@ function App() {
           onInput={(e) => setLoginPass(e.currentTarget.value)}
           />
         </div>
-          <button>continue</button>
+          <button onClick={handleLogin}>continue</button>
         </div>
       </Show>
       <Show when={activeTab() === 'register'}>
@@ -215,4 +216,4 @@ function App() {
   )
 }
 
-export default App
+export default AuthPage
