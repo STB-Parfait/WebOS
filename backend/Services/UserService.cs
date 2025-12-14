@@ -9,9 +9,9 @@ public class UserService
 {
     private readonly LocalDbContext _db;
 
-    public UserService(LocalDbContext _db){ this._db = _db; }
+    public UserService(LocalDbContext db){ this._db = db; }
 
-    public async Task<User> Create(UserDTO dto)
+    public async Task<UserResponseDTO> Create(UserDTO dto)
     {
         var exists = await _db.users.AnyAsync(u => u.email == dto.email);
 
@@ -20,12 +20,14 @@ public class UserService
             throw new InvalidOperationException("Email already in use");
         }
 
-        var newUser = new User(dto.username, dto.email, dto.password);
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.password);
+
+        var newUser = new User(dto.username, dto.email, passwordHash);
 
         _db.users.Add(newUser);
         await _db.SaveChangesAsync();
 
-        return newUser;
+        return new UserResponseDTO(newUser.Id, newUser.username, newUser.email);
     }
 
     public async Task<User?> GetById(string id)
@@ -38,12 +40,17 @@ public class UserService
     public async Task<bool> Update(string id, UserDTO dto)
     {
         if (!ObjectId.TryParse(id, out var objectId)) return false;
-
         var user = await _db.users.FindAsync(objectId);
-
         if (user is null) return false;
 
-        user.updateUserData(dto.username, dto.password);
+        string newPass = user.password;
+
+        if (!string.IsNullOrEmpty(dto.password))
+        {
+            newPass = BCrypt.Net.BCrypt.HashPassword(dto.password);
+        }
+
+        user.updateUserData(dto.username, newPass);
 
         await _db.SaveChangesAsync();
 
@@ -65,19 +72,18 @@ public class UserService
         return true;
     }
 
-    public async Task<User?> ValidarLogin(string email, string password)
+    public async Task<UserResponseDTO?> ValidarLogin(string email, string password)
         {
             var user = await _db.users
             .FirstOrDefaultAsync(u => u.email == email);
 
             if (user is null) return null;
 
-            // 3. Verifica a senha
-            // ATENÇÃO: Como estamos aprendendo, estamos comparando texto puro.
-            // Em produção, aqui você usaria BCrypt.Verify(password, user.PasswordHash)
-            if (user.password != password) return null;
+            bool validPassword = BCrypt.Net.BCrypt.Verify(password, user.password);
 
-            return user;
+            if (!validPassword) return null;
+
+            return new UserResponseDTO(user.Id, user.username, user.email);
         }
 
     public async Task<bool> CheckEmail(string email)

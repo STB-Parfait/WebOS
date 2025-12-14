@@ -19,7 +19,7 @@ public static class UserRoutes
             {
                 var user = await service.Create(dto);
 
-                return Results.Created($"/api/users/{user.Id}", user);
+                return Results.Created($"{user}", user);
             }
             catch (InvalidOperationException ex)
             {

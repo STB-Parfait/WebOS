@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 public class TokenService
 {
-    public string GenerateToken(User user)
+    public string GenerateToken(UserResponseDTO user)
     {
         var keyString = Environment.GetEnvironmentVariable("JWT_SECRET");
         var key = Encoding.ASCII.GetBytes(keyString);
